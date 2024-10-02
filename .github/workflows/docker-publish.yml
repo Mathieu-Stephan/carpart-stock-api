@@ -3,7 +3,7 @@ name: Docker Build and Push (Second Repo)
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
