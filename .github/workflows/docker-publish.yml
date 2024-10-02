@@ -1,0 +1,37 @@
+name: Docker Build and Push (Second Repo)
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1 : Récupérer le code source du dépôt
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Étape 2 : Configurer Docker Buildx pour des builds multi-plateformes
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      # Étape 3 : Connexion à Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }} # Utilisateur Docker Hub
+          password: ${{ secrets.DOCKER_TOKEN }}    # Token Docker Hub
+
+      # Étape 4 : Construire et taguer l'image pour l'application
+      - name: Build and Tag Docker Image
+        working-directory: ./app  # S'assurer que le Dockerfile est dans le dossier app
+        run: |
+          docker build . -t ${{ secrets.DOCKER_USERNAME }}/second_app:latest
+
+      # Étape 5 : Pousser l'image Docker sur Docker Hub
+      - name: Push Docker Image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/second_app:latest

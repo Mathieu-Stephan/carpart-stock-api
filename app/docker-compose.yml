@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  api:
+    build: .
+    container_name: carpart_api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URL=mongodb://mongo:27017
+  mongo:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
